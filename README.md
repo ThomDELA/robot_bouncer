@@ -56,6 +56,15 @@ python examples/minimal_movement.py
 ```
 
 You will see each step printed to the console until the robot reaches the goal tile.
+## Display the board in the console
+
+Run the minimal example to render a sample board configuration using the built-in console renderer:
+
+```bash
+python -m robot_bouncer.examples.display_board
+```
+
+The script prints the board using ASCII art so you can verify that the rendering layer works without wiring any solver logic.
 
 ## Playing the mini-game locally
 
