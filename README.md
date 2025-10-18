@@ -1,61 +1,78 @@
 # Robot Bouncer
 
-This repository provides a modular architecture for the Robot Bouncer game. The system is ready to host
-multiple independent features:
+This repository implements a small layered Python service themed around a "robot bouncer".  The codebase
+focuses on a single slice of functionality: deciding whether a guest may enter a venue and exposing that
+logic through a lightweight HTTP interface that powers a browser mini-game.
 
-- **Game mechanics** implemented in `robot_bouncer.core`, where entities and the rule-based engine live.
-- **Game visuals** exposed through the `robot_bouncer.visuals` package. A console renderer is included
-  as a reference implementation.
-- **Game solvers** defined in `robot_bouncer.solver`, featuring pluggable solver strategies such as a
-  breadth-first search (BFS) solver.
+## Architecture overview
 
-## Project layout
+The project follows a conventional ``src`` layout.  The important modules live under ``src/robot_bouncer``:
 
+```text
+src/robot_bouncer/
+├── adapters/
+│   └── repositories/
+│       └── in_memory.py        # Dictionary-backed repository implementation
+├── config/
+│   └── settings.py             # Simple settings dataclass and loader helper
+├── domain/
+│   ├── board.py                # Board game mechanics used in unit tests
+│   ├── entities.py             # Guest entity with admission logic
+│   └── exceptions.py           # Domain exception hierarchy
+├── interfaces/
+│   └── http/
+│       ├── app.py              # ThreadingHTTPServer-based mini-game backend
+│       └── static/             # Front-end assets served by the HTTP app
+└── services/
+    └── guard_service.py        # Application service coordinating decisions
 ```
-robot_bouncer/
-├── app.py                 # Application façade wiring together engine, renderer, and solver
-├── core/                  # Game mechanics domain layer
-│   ├── engine.py          # Rule-based engine and state representation
-│   └── entities.py        # Core data structures (board, robot, positions)
-├── visuals/               # Rendering abstractions and implementations
-│   ├── base.py            # Renderer protocol
-│   └── console.py         # ASCII console renderer
-└── solver/                # Solver abstractions and algorithms
-    ├── base.py            # Solver base classes and result container
-    └── bfs.py             # Breadth-first search solver implementation
-```
+
+The domain layer deliberately stays infrastructure-free.  Infrastructure concerns (HTTP serving and in-memory
+persistence) live in dedicated packages so they can be swapped or extended without touching the core models.
 
 ## Usage example
 
+The ``GuardService`` coordinates access decisions by delegating to a repository and the domain entity:
+
 ```python
-from robot_bouncer.app import GameConfig, RobotBouncerApp
-from robot_bouncer.core.entities import Position
+from datetime import datetime, timedelta
 
-app = RobotBouncerApp()
-config = GameConfig(
-    width=7,
-    height=5,
-    walls=[Position(3, y) for y in range(5)],
-    pads=[Position(1, 2), Position(5, 1)],
-    goals=[Position(6, 4)],
-    robot_start=Position(0, 0),
+from robot_bouncer.adapters.repositories.in_memory import InMemoryGuestRepository
+from robot_bouncer.domain.entities import Guest
+from robot_bouncer.services.guard_service import GuardService
+
+repository = InMemoryGuestRepository(
+    {
+        "vip": Guest(
+            identifier="vip",
+            name="Val Vega",
+            allowed=True,
+            allowed_until=datetime.utcnow() + timedelta(hours=1),
+        )
+    }
 )
+service = GuardService(repository)
 
-state = app.run(config)
-print("Goal reached:", state.is_goal_reached())
+print(service.authorize("vip").name)  # -> "Val Vega"
 ```
 
-This skeleton is designed to grow with the project. Each layer is kept independent so future changes—such as swapping persistence technologies or adding new interfaces—can be made with minimal coupling.
+The :mod:`robot_bouncer.domain.board` module provides a small Ricochet Robots style ruleset that is currently
+used in unit tests.  It remains available for future gameplay or puzzle extensions.
 
-## Playing the mini-game locally
+## Running the HTTP mini-game
 
-The repository now bundles a lightweight web experience so you can try the robot bouncer rules without extra dependencies.
+A minimal HTTP application ships with the repository.  It serves a static front-end and accepts simple POST
+requests so you can test the admission flow in a browser:
 
-1. From the project root run the HTTP server:
+```bash
+python -m robot_bouncer.interfaces.http.app
+```
 
-   ```bash
-   python -m robot_bouncer.interfaces.http.app
-   ```
+Open <http://127.0.0.1:8000> to play.  The service randomly cycles through a handful of demo guests and
+returns feedback based on whether your decision matches the underlying access rules.
 
-2. Open <http://127.0.0.1:8000> in a browser. A single-page app served from the project will appear with story prompts for
-   each guest. Decide whether to allow or deny entry and see your score update in real time.
+## Tests
+
+Install the project dependencies (``pip install -e .[test]`` if you maintain a local requirements file) and
+run the automated test suite with ``pytest``.  The repository includes unit and integration tests covering the
+board mechanics and the HTTP application behaviour.
