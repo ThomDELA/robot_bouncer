@@ -1,44 +1,49 @@
 # Robot Bouncer
 
-A Python-based service that determines whether a guest should be granted access by a robot bouncer. This repository currently contains the foundational project architecture and example code to illustrate how different layers interact.
+This repository provides a modular architecture for the Robot Bouncer game. The system is ready to host
+multiple independent features:
+
+- **Game mechanics** implemented in `robot_bouncer.core`, where entities and the rule-based engine live.
+- **Game visuals** exposed through the `robot_bouncer.visuals` package. A console renderer is included
+  as a reference implementation.
+- **Game solvers** defined in `robot_bouncer.solver`, featuring pluggable solver strategies such as a
+  breadth-first search (BFS) solver.
 
 ## Project layout
 
 ```
 robot_bouncer/
-├── src/
-│   └── robot_bouncer/
-│       ├── __init__.py
-│       ├── adapters/
-│       │   └── repositories/
-│       │       └── in_memory.py
-│       ├── config/
-│       │   └── settings.py
-│       ├── domain/
-│       │   ├── entities.py
-│       │   └── exceptions.py
-│       ├── interfaces/
-│       │   └── http/
-│       │       └── app.py
-│       └── services/
-│           └── guard_service.py
-├── tests/
-│   ├── integration/
-│   └── unit/
-│       └── test_guard_service.py
-└── README.md
+├── app.py                 # Application façade wiring together engine, renderer, and solver
+├── core/                  # Game mechanics domain layer
+│   ├── engine.py          # Rule-based engine and state representation
+│   └── entities.py        # Core data structures (board, robot, positions)
+├── visuals/               # Rendering abstractions and implementations
+│   ├── base.py            # Renderer protocol
+│   └── console.py         # ASCII console renderer
+└── solver/                # Solver abstractions and algorithms
+    ├── base.py            # Solver base classes and result container
+    └── bfs.py             # Breadth-first search solver implementation
 ```
 
-## Architectural overview
+## Usage example
 
-The codebase is organized around a layered architecture:
+```python
+from robot_bouncer.app import GameConfig, RobotBouncerApp
+from robot_bouncer.core.entities import Position
 
-- **Domain layer (`src/robot_bouncer/domain`)** – Contains entities and domain-specific exceptions that represent core business logic without infrastructure concerns.
-- **Application layer (`src/robot_bouncer/services`)** – Hosts orchestrating services that coordinate domain objects and enforce business workflows.
-- **Adapters layer (`src/robot_bouncer/adapters`)** – Provides infrastructure implementations, such as repositories, that satisfy protocols defined in the application layer.
-- **Interface layer (`src/robot_bouncer/interfaces`)** – Entry points that expose the application to the outside world (HTTP, CLI, etc.).
-- **Configuration (`src/robot_bouncer/config`)** – Centralized settings and configuration utilities shared across the application.
-- **Tests (`tests/`)** – Structured into `unit` and `integration` packages to keep fast tests separated from broader integration coverage.
+app = RobotBouncerApp()
+config = GameConfig(
+    width=7,
+    height=5,
+    walls=[Position(3, y) for y in range(5)],
+    pads=[Position(1, 2), Position(5, 1)],
+    goals=[Position(6, 4)],
+    robot_start=Position(0, 0),
+)
+
+state = app.run(config)
+print("Goal reached:", state.is_goal_reached())
+```
 
 This skeleton is designed to grow with the project. Each layer is kept independent so future changes—such as swapping persistence technologies or adding new interfaces—can be made with minimal coupling.
 
