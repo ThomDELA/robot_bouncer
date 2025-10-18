@@ -41,6 +41,25 @@ state = app.run(config)
 
 This skeleton is designed to grow with the project. Each layer is kept independent so future changes—such as swapping persistence technologies or adding new interfaces—can be made with minimal coupling.
 
+### Minimal movement demo
+
+The repository includes a standalone script that showcases how a single robot moves and bounces using the core engine.
+
+```bash
+python examples/minimal_movement.py
+```
+
+You will see each step printed to the console until the robot reaches the goal tile.
+## Display the board in the console
+
+Run the minimal example to render a sample board configuration using the built-in console renderer:
+
+```bash
+python -m robot_bouncer.examples.display_board
+```
+
+The script prints the board using ASCII art so you can verify that the rendering layer works without wiring any solver logic.
+
 ## Playing the mini-game locally
 
 The repository bundles a lightweight web experience so you can try the robot bouncer rules without extra dependencies.
