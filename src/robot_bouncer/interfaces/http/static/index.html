@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Robot Bouncer</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <header>
+        <h1>Robot Bouncer</h1>
+        <p class="tagline">
+          Decide who gets into the club! Read each guest's story, then choose to allow or deny entry.
+        </p>
+      </header>
+      <section id="game" class="card">
+        <div class="guest-details">
+          <p class="subtitle">Current guest</p>
+          <h2 id="guest-name">Loading guest...</h2>
+          <p id="guest-introduction" class="introduction"></p>
+          <ul id="guest-facts" class="facts"></ul>
+        </div>
+        <div class="controls">
+          <button id="allow-button" data-action="allow" class="action allow">Allow entry</button>
+          <button id="deny-button" data-action="deny" class="action deny">Deny entry</button>
+          <button id="next-button" class="secondary" hidden>Next guest</button>
+        </div>
+        <p id="feedback" role="status" class="feedback"></p>
+        <p class="score">
+          Score: <span id="score-correct">0</span>/<span id="score-total">0</span>
+        </p>
+      </section>
+      <footer>
+        <p>
+          Tip: The robot bouncer follows the house rules—expired passes or banned guests never get in.
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="/static/main.js"></script>
+  </body>
+</html>
