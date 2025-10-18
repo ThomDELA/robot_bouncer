@@ -1,0 +1,9 @@
+[project]
+name = "robot_bouncer"
+version = "0.1.0"
+description = "Configuration for the Robot Bouncer project."
+
+[settings]
+welcome_message = "Access granted"
+max_guests = 42
+allow_vip_override = true
