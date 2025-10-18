@@ -35,21 +35,15 @@ app = RobotBouncerApp()
 config = GameConfig(
     width=7,
     height=5,
-    walls=[Position(3, y) for y in range(5)],
-    pads=[Position(1, 2), Position(5, 1)],
-    goals=[Position(6, 4)],
-    robot_start=Position(0, 0),
 )
-
 state = app.run(config)
-print("Goal reached:", state.is_goal_reached())
 ```
 
 This skeleton is designed to grow with the project. Each layer is kept independent so future changes—such as swapping persistence technologies or adding new interfaces—can be made with minimal coupling.
 
 ## Playing the mini-game locally
 
-The repository now bundles a lightweight web experience so you can try the robot bouncer rules without extra dependencies.
+The repository bundles a lightweight web experience so you can try the robot bouncer rules without extra dependencies.
 
 1. From the project root run the HTTP server:
 
