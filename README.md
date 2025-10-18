@@ -1,1 +1,49 @@
-# robot_bouncer
+# Robot Bouncer
+
+This repository provides a modular architecture for the Robot Bouncer game. The system is ready to host
+multiple independent features:
+
+- **Game mechanics** implemented in `robot_bouncer.core`, where entities and the rule-based engine live.
+- **Game visuals** exposed through the `robot_bouncer.visuals` package. A console renderer is included
+  as a reference implementation.
+- **Game solvers** defined in `robot_bouncer.solver`, featuring pluggable solver strategies such as a
+  breadth-first search (BFS) solver.
+
+## Project layout
+
+```
+robot_bouncer/
+├── app.py                 # Application façade wiring together engine, renderer, and solver
+├── core/                  # Game mechanics domain layer
+│   ├── engine.py          # Rule-based engine and state representation
+│   └── entities.py        # Core data structures (board, robot, positions)
+├── visuals/               # Rendering abstractions and implementations
+│   ├── base.py            # Renderer protocol
+│   └── console.py         # ASCII console renderer
+└── solver/                # Solver abstractions and algorithms
+    ├── base.py            # Solver base classes and result container
+    └── bfs.py             # Breadth-first search solver implementation
+```
+
+## Usage example
+
+```python
+from robot_bouncer.app import GameConfig, RobotBouncerApp
+from robot_bouncer.core.entities import Position
+
+app = RobotBouncerApp()
+config = GameConfig(
+    width=7,
+    height=5,
+    walls=[Position(3, y) for y in range(5)],
+    pads=[Position(1, 2), Position(5, 1)],
+    goals=[Position(6, 4)],
+    robot_start=Position(0, 0),
+)
+
+state = app.run(config)
+print("Goal reached:", state.is_goal_reached())
+```
+
+The architecture separates concerns so that new mechanics, renderers, or solver strategies can be
+added independently without modifying existing code.
