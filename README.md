@@ -45,5 +45,3 @@ state = app.run(config)
 print("Goal reached:", state.is_goal_reached())
 ```
 
-The architecture separates concerns so that new mechanics, renderers, or solver strategies can be
-added independently without modifying existing code.
