@@ -41,3 +41,16 @@ The codebase is organized around a layered architecture:
 - **Tests (`tests/`)** – Structured into `unit` and `integration` packages to keep fast tests separated from broader integration coverage.
 
 This skeleton is designed to grow with the project. Each layer is kept independent so future changes—such as swapping persistence technologies or adding new interfaces—can be made with minimal coupling.
+
+## Playing the mini-game locally
+
+The repository now bundles a lightweight web experience so you can try the robot bouncer rules without extra dependencies.
+
+1. From the project root run the HTTP server:
+
+   ```bash
+   python -m robot_bouncer.interfaces.http.app
+   ```
+
+2. Open <http://127.0.0.1:8000> in a browser. A single-page app served from the project will appear with story prompts for
+   each guest. Decide whether to allow or deny entry and see your score update in real time.
