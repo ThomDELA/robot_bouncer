@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional
 
 from robot_bouncer.core.engine import GameEngine, GameState
-from robot_bouncer.core.entities import Position
+from robot_bouncer.core.entities import Direction, Position
 
 
 class SolverResult:
@@ -18,6 +18,39 @@ class SolverResult:
 
     def __repr__(self) -> str:
         return f"SolverResult(success={self.success}, steps={len(self.path)}, explored={self.explored})"
+
+    def to_commands(self) -> List[str]:
+        """Translate the path into human-readable movement commands."""
+
+        commands: List[str] = []
+        if len(self.path) < 2:
+            return commands
+
+        previous = self.path[0]
+        for current in self.path[1:]:
+            dx = current.x - previous.x
+            dy = current.y - previous.y
+            direction = self._direction_from_delta(dx, dy)
+            commands.append(self._format_command(direction, current))
+            previous = current
+        return commands
+
+    @staticmethod
+    def _direction_from_delta(dx: int, dy: int) -> Direction:
+        if dx == 0 and dy == 0:
+            raise ValueError("Consecutive positions in the solver path must be distinct.")
+        if dx > 0:
+            return Direction.EAST
+        if dx < 0:
+            return Direction.WEST
+        if dy > 0:
+            return Direction.SOUTH
+        return Direction.NORTH
+
+    @staticmethod
+    def _format_command(direction: Direction, destination: Position) -> str:
+        name = direction.name.capitalize()
+        return f"Move {name} to ({destination.x}, {destination.y})"
 
 
 class GameSolver(ABC):
