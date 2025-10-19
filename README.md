@@ -41,6 +41,34 @@ state = app.run(config)
 
 This skeleton is designed to grow with the project. Each layer is kept independent so future changes—such as swapping persistence technologies or adding new interfaces—can be made with minimal coupling.
 
+## Installation
+
+1. Ensure you have Python 3.11 or newer available on your machine.
+2. Create a virtual environment and activate it:
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+
+3. Install the project in editable mode together with the optional examples:
+
+   ```bash
+   pip install -e .
+   ```
+
+The package exposes console and GUI utilities, so installing it in editable mode makes it easy to tweak the source and immediately try the examples below.
+
+## Running tests
+
+Automated tests are provided through `pytest` and cover the rules engine as well as helper utilities. After installing the dependencies, run:
+
+```bash
+python -m pytest
+```
+
+You can pass additional flags (for example `-k` or `-vv`) to focus on specific scenarios while iterating on new mechanics.
+
 ### Minimal movement demo
 
 The repository includes a standalone script that showcases how a single robot moves and bounces using the core engine.
