@@ -55,7 +55,7 @@ You will see each step printed to the console until the robot reaches the goal t
 Run the minimal example to render a sample board configuration using the built-in console renderer:
 
 ```bash
-python -m robot_bouncer.examples.display_board
+python examples/display_board.py
 ```
 
 The script prints the board using ASCII art so you can verify that the rendering layer works without wiring any solver logic.
