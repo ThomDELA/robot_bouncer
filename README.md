@@ -60,6 +60,16 @@ python -m robot_bouncer.examples.display_board
 
 The script prints the board using ASCII art so you can verify that the rendering layer works without wiring any solver logic.
 
+## Display the board with PyQt
+
+If you have `PyQt6` or `PyQt5` installed, you can open the same board layout in a desktop window:
+
+```bash
+python -m robot_bouncer.examples.pyqt_show_grid
+```
+
+The PyQt renderer shows the grid, walls, pads, goal, and robot using emoji tiles so you can quickly inspect the layout without running the solver.
+
 ## Playing the mini-game locally
 
 The repository bundles a lightweight web experience so you can try the robot bouncer rules without extra dependencies.
