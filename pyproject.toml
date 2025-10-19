@@ -15,12 +15,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["robot_bouncer*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src"]
+testpaths = ["robot_bouncer"]
