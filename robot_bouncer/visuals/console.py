@@ -91,3 +91,6 @@ class ConsoleRenderer(GameRenderer):
         if self.use_grid:
             return self._render_with_grid(tiles)
         return self._render_flat(tiles)
+
+    def display_with_commands(self, state: GameState, commands: list[str]) -> None:
+        super().display_with_commands(state, commands)

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Protocol
+from typing import Iterable, Protocol
 
 from robot_bouncer.core.engine import GameState
 
@@ -25,3 +25,10 @@ class GameRenderer(ABC):
         """Render and print the state."""
 
         print(self.render(state))
+
+    def display_with_commands(self, state: GameState, commands: Iterable[str]) -> None:
+        """Display the state alongside the commands required to reach it."""
+
+        self.display(state)
+        for command in commands:
+            print(command)
