@@ -35,6 +35,15 @@ class SolverResult:
             previous = current
         return commands
 
+    def to_computation_details(self) -> List[str]:
+        """Return user-facing details about the solver computation."""
+
+        return [
+            f"Solved: {'yes' if self.success else 'no'}",
+            f"States explored: {self.explored}",
+            f"Path length: {max(len(self.path) - 1, 0)} moves",
+        ]
+
     @staticmethod
     def _direction_from_delta(dx: int, dy: int) -> Direction:
         if dx == 0 and dy == 0:

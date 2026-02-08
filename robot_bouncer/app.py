@@ -62,8 +62,10 @@ class RobotBouncerApp:
         result = solver.solve(state)
         solver.apply_solution(state, result)
         commands = result.to_commands()
-        if commands:
-            self.renderer.display_with_commands(state, commands)
+        computation_details = result.to_computation_details()
+        if commands or computation_details:
+            details_and_commands = [*computation_details, *commands]
+            self.renderer.display_with_commands(state, details_and_commands)
         else:
             self.renderer.display(state)
         return state
